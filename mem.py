@@ -52,9 +52,8 @@ def to_number(buff: bytearray, size, signed, little_endian=True):
 # global_copy = Memory_copy()
 
 program = Memory()
-program.load_binary_file(path="D:/Osama Shits/OsamaPure.txt", starting_address=0)
-program.load_binary_file(path="D:/Osama Shits/OsamaPure1.txt", starting_address=8192)
-
+program.load_binary_file(path="C:/Users/asaad/Desktop/test2/V2Code", starting_address=0)
+program.load_binary_file(path="C:/Users/asaad/Desktop/test2/V2Data", starting_address=8191)
 
 @block
 def memory(data_in, enable, size, address,addressWrite, data_out):

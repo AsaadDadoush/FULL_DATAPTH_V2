@@ -3,8 +3,8 @@ from memory import Memory
 from mem import to_number
 
 ProgramData = Memory()
-ProgramData.load_binary_file(path="D:/Osama Shits/OsamaPure1.txt", starting_address=0)
-ProgramData.load_binary_file(path="D:/Osama Shits/OsamaPure.txt", starting_address=8191)
+ProgramData.load_binary_file(path="C:/Users/asaad/Desktop/test2/V2Code", starting_address=0)
+ProgramData.load_binary_file(path="C:/Users/asaad/Desktop/test2/V2Data", starting_address=8191)
 
 
 # print(ProgramData.Max_Address)
