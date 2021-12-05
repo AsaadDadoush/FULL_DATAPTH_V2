@@ -32,9 +32,9 @@ def top_level(Constant_4, clk, reset):
     immS = Signal(intbv(0)[12:0])
     immB = Signal(intbv(0)[12:0])
     rd = Signal(intbv(0)[5:])
-    rs1_out = Signal(modbv(1, min=0, max=83*4)[32:])
-    rs2_out = Signal(modbv(1, min=0, max=83*4)[32:])
-    data_in_Reg = Signal(modbv(1, min=0, max=83*4)[32:])
+    rs1_out = Signal(intbv(1, min=-2**31, max=2**31))
+    rs2_out = Signal(intbv(1, min=-2**31, max=2**31))
+    data_in_Reg = Signal(intbv(1, min=-2**31, max=2**31))
     imm32I = Signal(intbv(0)[32:0])
     imm32S = Signal(intbv(0)[32:0])
     imm32B = Signal(intbv(0)[32:0])
@@ -57,9 +57,9 @@ def top_level(Constant_4, clk, reset):
     input_for_shifter = Signal(modbv(0)[32:])
     # todo modbv
     shifter_out = Signal(intbv(0, min=-2 ** 31, max=2 ** 31))
-    a = Signal(modbv(1, min=0, max=83*4)[32:])
-    b = Signal(modbv(1, min=0, max=83*4)[32:])
-    alu_out = Signal(modbv(1, min=0, max=83*4)[32:])
+    a = Signal(modbv(1, min=-2**31, max=2**31))
+    b = Signal(modbv(1, min=-2**31, max=2**31))
+    alu_out = Signal(modbv(1, min=-2**31, max=2**31))
     sign_selection = Signal(intbv(2)[2:])
     signed_extnetion_output = Signal(intbv(0)[32:])
     Data_Memory_out = Signal(intbv(0)[32:])
@@ -113,7 +113,7 @@ def test_bench():
     Constant_4 = Signal(intbv(4)[32:])
     ins = top_level(Constant_4, clk, reset)
 
-    @always(delay(600))
+    @always(delay(14000))
     def gen_clk():
         clk.next = not clk
 
@@ -126,4 +126,4 @@ def test_bench():
 
 
 test = test_bench()
-test.run_sim(12000)
+test.run_sim()

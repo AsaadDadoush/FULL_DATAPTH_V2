@@ -4,7 +4,7 @@ from myhdl import *
 
 @block
 def alu(a, b, sel, out):
-    @always(a and b)
+    @always(a, b)
     def alu():
         # ADD
         if sel == 0:

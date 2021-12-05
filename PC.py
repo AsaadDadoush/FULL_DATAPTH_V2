@@ -2,7 +2,7 @@ from myhdl import*
 
 @block
 def pc(pass_input, out, clk, reset):
-    @always(clk.posedge, pass_input)
+    @always(clk.posedge)
     def pcblock():
         print("reset: ", reset + 0)
         if reset:

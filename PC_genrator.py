@@ -1,7 +1,5 @@
 from myhdl import *
-sel0 = 0
-sel1 = 0
-sel2 = 0
+
 
 
 @block
@@ -13,8 +11,13 @@ def PC_gen(PC, rs1, imm, sel, out, alu_out):
                 out.next = PC+4
             elif alu_out == 1:
                 out.next = PC+imm
+        elif sel == 1:
+            out.next = PC+imm
         elif sel == 2:
-            out.next = PC+rs1
+            out.next = rs1 + imm
+        elif sel == 3:
+            out.next = PC+4
+
 
         print("=============================== PC_gen ==============================")
         print("PC  (input 1): ", PC + 0)

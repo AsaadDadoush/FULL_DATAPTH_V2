@@ -2,8 +2,8 @@ from myhdl import *
 from memory import Memory
 from mem import to_number
 Program_Instructions = Memory()
-Program_Instructions.load_binary_file(path="C:/Users/asaad/Desktop/test2/V2Code", starting_address=0)
-Program_Instructions.load_binary_file(path="C:/Users/asaad/Desktop/test2/V2Data", starting_address=8191)
+Program_Instructions.load_binary_file(path="D:/Osama Shits/Bubble-sort-data.txt", starting_address=0)
+Program_Instructions.load_binary_file(path="D:/Osama Shits/Bubble-Sort-text.txt", starting_address=8191)
 
 
 @block

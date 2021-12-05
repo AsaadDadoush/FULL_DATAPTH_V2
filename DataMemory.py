@@ -3,12 +3,14 @@ from memory import Memory
 from mem import to_number
 
 ProgramData = Memory()
-ProgramData.load_binary_file(path="C:/Users/asaad/Desktop/test2/V2Code", starting_address=0)
-ProgramData.load_binary_file(path="C:/Users/asaad/Desktop/test2/V2Data", starting_address=8191)
-
+ProgramData.load_binary_file(path="D:/Osama Shits/Bubble-sort-data.txt", starting_address=0)
+ProgramData.load_binary_file(path="D:/Osama Shits/Bubble-Sort-text.txt", starting_address=8191)
 
 # print(ProgramData.Max_Address)
-
+copy_Mem1 = None
+copy_Mem2 = None
+copy_Mem3 = None
+copy_Mem4 = None
 
 @block
 def DataMemory(data_in, enable, size, address, data_out):
@@ -77,6 +79,8 @@ def DataMemory(data_in, enable, size, address, data_out):
 
     @always(data_in, address, enable, size)
     def Write_logic():
+        if address < 0:
+            data.next = 0
         translated_address = int(address/4)
         if enable == 1:
             if size == 0:
@@ -96,10 +100,18 @@ def DataMemory(data_in, enable, size, address, data_out):
                 Mem2[translated_address].next = data_in[16:8]
                 Mem3[address].next = data_in[24:16]
                 Mem4[translated_address].next = data_in[32:24]
+        global copy_Mem1,copy_Mem2,copy_Mem3,copy_Mem4
+        copy_Mem1 = Mem1.copy()
+        copy_Mem2 = Mem2.copy()
+        copy_Mem3 = Mem3.copy()
+        copy_Mem4 = Mem4.copy()
 
-    @always(address, size)
+    @always(address, size, enable)
     def Read_logic():
+
         translated_address = int(address / 4)
+        if translated_address > 3072:
+            translated_address = 3071
         print("Translated Address: ",translated_address)
         if size == 0:
             data_out.next = concat("00000000", "00000000", "00000000", Mem1[translated_address])
@@ -108,6 +120,11 @@ def DataMemory(data_in, enable, size, address, data_out):
         else:
             data_out.next = concat(Mem4[translated_address], Mem3[translated_address], Mem2[translated_address],
                                    Mem1[translated_address])
+        global copy_Mem1, copy_Mem2, copy_Mem3, copy_Mem4
+        copy_Mem1 = Mem1.copy()
+        copy_Mem2 = Mem2.copy()
+        copy_Mem3 = Mem3.copy()
+        copy_Mem4 = Mem4.copy()
     print("")
 
     return instances()

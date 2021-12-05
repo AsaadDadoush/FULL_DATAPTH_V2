@@ -7,7 +7,7 @@ randrange = random.randrange
 
 @block
 def mux_3to1(i0, i1, i2, sel, out):
-    @always(i0, i1)
+    @always(i0, i1, i2)
     def mux3to1():
         if sel == 0:
             out.next = i0
@@ -29,16 +29,16 @@ def mux_3to1(i0, i1, i2, sel, out):
 
 @block
 def mux_3to1_for_Register(i0, i1, i2, sel, out):
-    @always(i1)
+    @always(i0, i1, i2)
     def mux3to1():
         if sel == 0:
-            out.next = i0
+            out.next = i0.signed()
         elif sel == 1:
-            out.next = i1
+            out.next = i1.signed()
         elif sel == 2:
-            out.next = i2
+            out.next = i2.signed()
         else:
-            out.next = i2
+            out.next = i2.signed()
         print("============== ALU result or Load Value or imm<<12 mux ==============")
         print("input i0: ", i0 + 0)
         print("input i1: ", i1 + 0)
