@@ -3,22 +3,27 @@ import opcode
 from myhdl import *
 
 
-from DataMemory import copy_Mem1,copy_Mem2,copy_Mem3,copy_Mem4
-
-
-
+# from DataMemory import copy_Mem1,copy_Mem2,copy_Mem3,copy_Mem4
 
 
 def sys_Call(copy_register, copy_Mem1, copy_Mem2, copy_Mem3, copy_Mem4):
+    print("Reg[17]: ", copy_register[17] + 0)
     if copy_register[17] == 93:
+        for i in range(len(copy_register)):
+            print("Reg[%s]: %s" % (i, copy_register[i]+0))
         raise StopSimulation
     elif copy_register[17] == 64:
+        for i in range(len(copy_register)):
+            print("Reg[%s]: %s" % (i, copy_register[i]+0))
         if copy_register[10] == 1:
+            base_address = copy_register[11]
             translated_address = int(copy_register[12] / 4)
+            print(copy_Mem1[translated_address]+0)
             for i in range(translated_address):
                 translated_address = int(copy_register[12] / 4)
-                print(bytearray.decode(concat(copy_Mem4[translated_address],copy_Mem3[translated_address],copy_Mem2[translated_address],copy_Mem1[translated_address])), end="")
-                copy_register[11] += 1
+                print(copy_Mem4[translated_address] + copy_Mem3[translated_address] + copy_Mem2[translated_address] +
+                      copy_Mem1[translated_address] + 0)
+                base_address = base_address + 1
 
 
 
@@ -32,6 +37,7 @@ def control(opcode, func3, func7, branch_result, size_sel, operation_sel, enable
         if opcode == 0b0110011:
             PC_or_rs1.next = 1
             rs2_or_imm_or_4.next = 0
+            enable_write.next = 0
             ALU_or_load_or_immShiftedBy12.next = 0
             PC_genrator_sel.next = 3
             Enable_Reg.next = 1
@@ -102,6 +108,7 @@ def control(opcode, func3, func7, branch_result, size_sel, operation_sel, enable
         elif opcode == 0b0010011:
             PC_or_rs1.next = 1
             rs2_or_imm_or_4.next = 1
+            enable_write.next = 0
             ALU_or_load_or_immShiftedBy12.next = 0
             imm_sel.next = 0
             Shift_amount.next = 2
@@ -149,6 +156,7 @@ def control(opcode, func3, func7, branch_result, size_sel, operation_sel, enable
         elif opcode == 0b0000011:
             print("I-type (LOAD instructions)")
             operation_sel.next = 0
+            enable_write.next = 0
             PC_genrator_sel.next = 3
             PC_or_rs1.next = 1
             rs2_or_imm_or_4.next = 1
@@ -190,6 +198,7 @@ def control(opcode, func3, func7, branch_result, size_sel, operation_sel, enable
             PC_or_rs1.next = 1
             rs2_or_imm_or_4.next = 1
             imm_sel.next = 1
+            Enable_Reg.next = 0
             Shift_amount.next = 2
             # Store Byte
             if func3 == 0x0:
@@ -207,7 +216,9 @@ def control(opcode, func3, func7, branch_result, size_sel, operation_sel, enable
         elif opcode == 0b1100011:
             PC_or_rs1.next = 1
             rs2_or_imm_or_4.next = 0
+            enable_write.next = 0
             imm_sel.next = 2
+            Enable_Reg.next = 0
             Shift_amount.next = 0
             # Branch ==
             if func3 == 0x0:
@@ -240,6 +251,7 @@ def control(opcode, func3, func7, branch_result, size_sel, operation_sel, enable
             print("Jump And Link")
             operation_sel.next = 0
             PC_genrator_sel.next = 1
+            enable_write.next = 0
             PC_or_rs1.next = 0
             rs2_or_imm_or_4.next = 2
             ALU_or_load_or_immShiftedBy12.next = 0
@@ -252,7 +264,7 @@ def control(opcode, func3, func7, branch_result, size_sel, operation_sel, enable
             print("Jump And Link Reg")
             operation_sel.next = 0
             PC_genrator_sel.next = 2
-            PC_or_rs1.next
+            enable_write.next = 0
             rs2_or_imm_or_4.next = 2
             ALU_or_load_or_immShiftedBy12.next = 0
             imm_sel.next = 0
@@ -262,19 +274,21 @@ def control(opcode, func3, func7, branch_result, size_sel, operation_sel, enable
         elif opcode == 0b0110111:
             print("Load Upper Imm")
             PC_genrator_sel.next = 3
+            enable_write.next = 0
             ALU_or_load_or_immShiftedBy12.next = 2
             imm_sel.next = 3
             Shift_amount.next = 1
             Enable_Reg.next = 1
-        # U-type (Add Upper Imm to PC)
+        # Ecall
         elif opcode == 0b1110011:
+            Enable_Reg.next = 0
             print("Ecall")
-            sys_Call(obj.copy_register, copy_Mem1,copy_Mem2,copy_Mem3,copy_Mem4)
-            raise StopSimulation
+            sys_Call(obj.copy_register, obj.Mem1, obj.Mem2, obj.Mem3, obj.Mem4)
         # U-type (Add Upper Imm to PC)
         else:
             print("Add Upper Imm to PC")
             operation_sel.next = 0
+            enable_write.next = 0
             Shift_amount.next = 1
             imm_sel.next = 3
             Enable_Reg.next = 1
@@ -283,47 +297,16 @@ def control(opcode, func3, func7, branch_result, size_sel, operation_sel, enable
             rs2_or_imm_or_4.next = 1
             PC_genrator_sel.next = 3
 
-        print("Opcode : %s" % bin(opcode, 7))
-        print("func3 : %s" % bin(func3, 3))
-        print("func7 : %s" % bin(func7, 7))
-        print('-' * 30)
-        print("size_sel: ", size_sel.next + 0)
-        print("operation_sel: ", operation_sel.next + 0)
-        print("enable_write: ", enable_write.next + 0)
-        # print("PC_genrator_sel: ", PC_genrator_sel.next + 0)
-        print("imm_sel: ", imm_sel.next + 0)
-        print("rs2_or_imm_or_4: ", rs2_or_imm_or_4.next + 0)
-
-        print("PC_or_rs1: ", PC_or_rs1.next + 0)
-        # print("ALU_or_load_or_immShiftedBy12: ", ALU_or_load_or_immShiftedBy12.next + 0)
-        print("Shift_amount: ", Shift_amount.next + 0)
-        print("Enable_Reg: ", Enable_Reg.next + 0)
-        print("sign_selection: ", sign_selection.next + 0)
-        print("")
-
-    # @always(branch_result)
-    # def PC_gen_logic():
-    #     if opcode == 0b1100011:
-    #         if branch_result == 1:
-    #             print("Branch has been taken")
-    #             PC_genrator_sel.next = 1
-    #         else:
-    #             print("Branch has not been taken")
-    #             PC_genrator_sel.next = 0
-    #     elif opcode == 0b1101111:
-    #         PC_genrator_sel.next = 1
-    #         print("PC = PC + imm")
-    #     elif opcode == 0b1100111:
-    #         PC_genrator_sel.next = 2
-    #         print("PC = rs1 + imm")
     return instances()
+
 
 class copy:
     def __init__(self):
         self.copy_register = []
+        self.Mem1 = []
+        self.Mem2 = []
+        self.Mem3 = []
+        self.Mem4 = []
 
-    def cop(self, Reg):
-        self.copy_register = Reg
-        return self.copy_register
 
 obj = copy()

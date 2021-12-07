@@ -10,7 +10,7 @@ def readfile(path):
 
 class Memory:
 
-    def __init__(self, maxsize=12288):
+    def __init__(self, maxsize=8191):
 
         self.buffer = bytearray(maxsize)
         self.Max_Address = len(self.buffer)

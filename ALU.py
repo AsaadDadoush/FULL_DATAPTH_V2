@@ -4,11 +4,16 @@ from myhdl import *
 
 @block
 def alu(a, b, sel, out):
-    @always(a, b)
+    @always_comb
     def alu():
         # ADD
         if sel == 0:
-            out.next = a.signed() + b.signed()
+            v = a.signed() + b.signed()
+            if v < 0:
+                out.next = 0
+            else:
+                out.next = v
+
         # MULTIPLY
         elif sel == 1:
             out.next = a.signed() * b.signed()
@@ -56,7 +61,7 @@ def alu(a, b, sel, out):
                 out.next = 0
         # Branch <=
         elif sel == 12:
-            if a.signed() <= b.signed():
+            if a.signed() >= b.signed():
                 out.next = 1
             else:
                 out.next = 0
@@ -80,10 +85,10 @@ def alu(a, b, sel, out):
         else:
             out.next = a.signed() % b[32:]
 
-        print("================================ ALU ================================")
-        print("a: ", a+0, " b: ", b+0)
-        print("Operation: ", sel + 0)
-        print("ALU out: ", out.next+0)
-        print("")
+        # print("================================ ALU ================================")
+        # print("a: ", a+0, " b: ", b+0)
+        # print("Operation: ", sel + 0)
+        # # print("ALU out: ", out.next+0)
+        # print("")
 
     return alu

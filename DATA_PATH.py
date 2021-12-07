@@ -3,8 +3,7 @@ from ALU import alu
 from control import control
 from extender import extender
 from Instruction_decoder import ins_dec
-from mem import memory
-from mux2_1 import mux2_1, mux2_1_pcANDalu
+from mux2_1 import mux2_1
 from mux3_1 import mux_3to1, mux_3to1_for_Register
 from Mux8_1 import mux8_1
 from PC import pc
@@ -32,9 +31,9 @@ def top_level(Constant_4, clk, reset):
     immS = Signal(intbv(0)[12:0])
     immB = Signal(intbv(0)[12:0])
     rd = Signal(intbv(0)[5:])
-    rs1_out = Signal(intbv(1, min=-2**31, max=2**31))
-    rs2_out = Signal(intbv(1, min=-2**31, max=2**31))
-    data_in_Reg = Signal(intbv(1, min=-2**31, max=2**31))
+    rs1_out = Signal(intbv(0, min=-2**31, max=2**31))
+    rs2_out = Signal(intbv(0, min=-2**31, max=2**31))
+    data_in_Reg = Signal(intbv(0, min=-2**31, max=2**31))
     imm32I = Signal(intbv(0)[32:0])
     imm32S = Signal(intbv(0)[32:0])
     imm32B = Signal(intbv(0)[32:0])
@@ -54,12 +53,12 @@ def top_level(Constant_4, clk, reset):
     Shift_amount = Signal(intbv(0)[2:])
     Enable_Reg = Signal(bool(1))
     # todo modbv
-    input_for_shifter = Signal(modbv(0)[32:])
+    input_for_shifter = Signal(intbv(0)[32:])
     # todo modbv
-    shifter_out = Signal(intbv(0, min=-2 ** 31, max=2 ** 31))
-    a = Signal(modbv(1, min=-2**31, max=2**31))
-    b = Signal(modbv(1, min=-2**31, max=2**31))
-    alu_out = Signal(modbv(1, min=-2**31, max=2**31))
+    shifter_out = Signal(modbv(0, min=-2**31, max=2**31))
+    a = Signal(intbv(0, min=-2**31, max=2**31))
+    b = Signal(intbv(0, min=-2**31, max=2**31))
+    alu_out = Signal(intbv(0)[32:0])
     sign_selection = Signal(intbv(2)[2:])
     signed_extnetion_output = Signal(intbv(0)[32:])
     Data_Memory_out = Signal(intbv(0)[32:])
@@ -76,7 +75,7 @@ def top_level(Constant_4, clk, reset):
 
     # Main_memory = memory(rs2_out, enable_write, size_sel, pc_out, alu_out, Instruction_Memory_out)
     Instruction_Memory = InstructionMemory(pc_out, Instruction_Memory_out)
-    Data_Memory = DataMemory(rs2_out, enable_write, size_sel, alu_out, Data_Memory_out)
+    Data_Memory = DataMemory(rs2_out, enable_write, size_sel, alu_out, Data_Memory_out, clk)
     # Main_memory = memory(Instruction_Memory_out, pc_out)
     # ================== input =============
     Decode = ins_dec(Instruction_Memory_out, opcode, rd, func3, rs1, rs2, func7, immI, immS, immB, immU,
@@ -85,7 +84,7 @@ def top_level(Constant_4, clk, reset):
                    rs2_or_imm_or_4, PC_or_rs1, ALU_or_load_or_immShiftedBy12, Shift_amount, Enable_Reg,
                    sign_selection)  # Control
     # ================== inputs ========== outputs================== input
-    Reg = registers(rs1, rs2, rd, rs1_out, rs2_out, Enable_Reg, data_in_Reg)  # Reg
+    Reg = registers(rs1, rs2, rd, rs1_out, rs2_out, Enable_Reg, data_in_Reg,clk)  # Reg
 
     ext = extender(immI, immS, immB, immU, immJ, imm32I, imm32S, imm32B, imm32U, imm32J)  # extend for imm
     mux_Reg = mux_3to1_for_Register(alu_out, signed_extnetion_output, shifter_out, ALU_or_load_or_immShiftedBy12,
@@ -116,12 +115,6 @@ def test_bench():
     @always(delay(14000))
     def gen_clk():
         clk.next = not clk
-
-    # @instance
-    # def simulate():
-    #     reset.next = 1
-    #     yield delay(10)
-
     return instances()
 
 

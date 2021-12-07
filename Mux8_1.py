@@ -22,13 +22,13 @@ def mux8_1(i0, i1, i2, i3, i4, out, sel):
             out.next = i4
         else:
             out.next = i4
-        print("============================== imm mux ==============================")
-        print("input i0: ", i0 + 0)
-        print("input i1: ", i1 + 0)
-        print("input i2: ", i2 + 0)
-        print("input i3: ", i3 + 0)
-        print("input i4: ", i4 + 0)
-        print("Selection: ", sel + 0)
-        print("Output: ", out.next + 0)
-        print("")
+        # print("============================== imm mux ==============================")
+        # print("input i0: ", i0.signed() + 0)
+        # print("input i1: ", i1.signed() + 0)
+        # print("input i2: ", i2.signed() + 0)
+        # print("input i3: ", i3.signed() + 0)
+        # print("input i4: ", i4.signed() + 0)
+        # print("Selection: ", sel + 0)
+        # print("Output: ", out.next + 0)
+        # print("")
     return mux

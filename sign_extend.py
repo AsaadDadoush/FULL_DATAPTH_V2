@@ -16,9 +16,9 @@ def sign_extender(data_in,sel,data_out):
             data_out.next = data_in
         else:
             data_out.next = data_in
-        print("=========================== Sign Extender ===========================")
-        print("Data in:  ", bin(data_in, 32))
-        print("Selection:  ", sel+0)
-        print("Data Out: ", bin(data_out.next, 32))
-        print("")
+        # print("=========================== Sign Extender ===========================")
+        # print("Data in:  ", bin(data_in, 32))
+        # print("Selection:  ", sel+0)
+        # print("Data Out: ", bin(data_out.next, 32))
+        # print("")
     return logic
