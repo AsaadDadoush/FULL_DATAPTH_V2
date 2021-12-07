@@ -4,8 +4,8 @@ import control
 from memory import Memory
 from mem import to_number
 ProgramData = Memory()
-ProgramData.load_binary_file(path="D:/text.txt", starting_address=0)
-ProgramData.load_binary_file(path="D:/data.txt", starting_address=8192)
+ProgramData.load_binary_file(path="C:/Users/asaad/Desktop/test2/Bsort_text.txt", starting_address=0)
+ProgramData.load_binary_file(path="C:/Users/asaad/Desktop/test2/Bsort_data.txt", starting_address=8192)
 
 
 @block
