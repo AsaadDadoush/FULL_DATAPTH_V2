@@ -1,8 +1,5 @@
 from myhdl import *
-from copy import deepcopy
-
-import control
-from control import obj
+from Sys_call import obj
 
 
 @block
@@ -14,12 +11,12 @@ def registers(rs1, rs2, rd, rs1_out, rs2_out, enable, DataWrite, clk):
     Reg[2]._update()
     Reg[3] = Signal(intbv(6144)[32:])
     Reg[3]._update()
+    obj.copy_register = Reg
 
     @always_comb
     def Read_logic():
         rs1_out.next = Reg[rs1].signed()
         rs2_out.next = Reg[rs2].signed()
-        control.obj.copy_register = Reg
 
     @always_seq(clk.posedge, reset=None)
     def write_logic():
@@ -32,5 +29,6 @@ def registers(rs1, rs2, rd, rs1_out, rs2_out, enable, DataWrite, clk):
             Reg[2]._update()
             Reg[3] = Signal(intbv(6144)[32:])
             Reg[3]._update()
+            obj.copy_register = Reg
 
     return instances()
