@@ -1,18 +1,17 @@
 from myhdl import *
-from tabulate import *
 
 from ALU import alu
 from control import control, obj
 from extender import extender
 from Instruction_decoder import ins_dec
-from mem import to_number
+from memory import to_number
 from memory import Memory
 from mux2_1 import mux2_1
-from mux3_1 import mux_3to1, mux_3to1_for_Register
-from Mux8_1 import mux8_1
+from mux3_1 import mux_3to1
+from mux5_1 import mux5_1
 from PC import pc
 from PC_genrator import PC_gen
-from registers import registers
+from registers_syn import registers
 from shifter import shifter
 from sign_extend import sign_extender
 from InstructionMemory import InstructionMemory
@@ -53,7 +52,7 @@ def top_level(Constant_4, clk, reset, load_ins, load_data, load_address, flag):
     # =================== input == Data in == enable ========== output ===========
 
     # Main_memory = memory(rs2_out, enable_write, size_sel, pc_out, alu_out, Instruction_Memory_out)
-    Instruction_Memory = InstructionMemory(load_ins, load_address, pc_out, Instruction_Memory_out,clk)
+    Instruction_Memory = InstructionMemory(load_ins, load_address, pc_out, Instruction_Memory_out, clk)
     Data_Memory = DataMemory(rs2_out, enable_write, size_sel, alu_out, Data_Memory_out, clk, load_data, load_address)
 
     # ================== input =============
@@ -66,9 +65,9 @@ def top_level(Constant_4, clk, reset, load_ins, load_data, load_address, flag):
     Reg = registers(rs1, rs2, rd, rs1_out, rs2_out, Enable_Reg, data_in_Reg, clk)  # Reg
 
     ext = extender(immI, immS, immB, immU, immJ, imm32I, imm32S, imm32B, imm32U, imm32J)  # extend for imm
-    mux_Reg = mux_3to1_for_Register(alu_out, signed_extnetion_output, shifter_out, ALU_or_load_or_immShiftedBy12,
-                                    data_in_Reg)  # mux for Reg file
-    mux_imm = mux8_1(imm32I, imm32S, imm32B, imm32U, imm32J, input_for_shifter, imm_sel)  # mux imm to shift
+    mux_Reg = mux_3to1(alu_out, signed_extnetion_output, shifter_out, ALU_or_load_or_immShiftedBy12,
+                       data_in_Reg)  # mux for Reg file
+    mux_imm = mux5_1(imm32I, imm32S, imm32B, imm32U, imm32J, input_for_shifter, imm_sel)  # mux imm to shift
     # ===============input============== sel========== output
     shift = shifter(input_for_shifter, Shift_amount, shifter_out)  # shifter for imm
     # ====================== inputs ================ sel ===== out
@@ -92,7 +91,7 @@ def test_bench():
     load_data = Signal(intbv(0)[32:])
     load_address = Signal(intbv(0)[32:])
     flag = Signal(bool(0))
-    ins = top_level(Constant_4, clk, reset, load_ins, load_data, load_address,flag)
+    ins = top_level(Constant_4, clk, reset, load_ins, load_data, load_address, flag)
 
     @always(delay(14000))
     def gen_clk():
@@ -117,35 +116,42 @@ def test_bench():
         # cell_4 = concat(obj.Mem4[i + 1], obj.Mem3[i + 1], obj.Mem2[i + 1], obj.Mem1[i + 1]) + 0
         # cell_8 = concat(obj.Mem4[i + 2], obj.Mem3[i + 2], obj.Mem2[i + 2], obj.Mem1[i + 2]) + 0
         # cell_16 = concat(obj.Mem4[i + 3], obj.Mem3[i + 3], obj.Mem2[i + 3], obj.Mem1[i + 3]) + 0
-        print("===================================================== Memory ====================================================")
-        print("|Address|     +0     |     +4     |     +8     |     +12    |     +16    |     +20    |     +24    |     +28    |")
-        print("|=======+============+============+============+============+============+============+============+============|")
+        print("===================================================== Memory =================="
+              "==================================")
+        print("|Address|     +0     |     +4     |     +8     |     +12    |     +16    |     +20    |    "
+              " +24    |     +28    |")
+        print("|=======+============+============+============+============+============+============+====="
+              "=======+============|")
         address_p = 0
         i1 = 0
         for i in range(384):
-            cell_0 = concat(obj.Mem4[i1],obj.Mem3[i1],obj.Mem2[i1],obj.Mem1[i1])+0
-            cell_4 = concat(obj.Mem4[i1 + 1], obj.Mem3[i1 +1],  obj.Mem2[i1 + 1], obj.Mem1[i1 + 1]) + 0
+            cell_0 = concat(obj.Mem4[i1], obj.Mem3[i1], obj.Mem2[i1], obj.Mem1[i1]) + 0
+            cell_4 = concat(obj.Mem4[i1 + 1], obj.Mem3[i1 + 1], obj.Mem2[i1 + 1], obj.Mem1[i1 + 1]) + 0
             cell_8 = concat(obj.Mem4[i1 + 2], obj.Mem3[i1 + 2], obj.Mem2[i1 + 2], obj.Mem1[i1 + 2]) + 0
             cell_12 = concat(obj.Mem4[i1 + 3], obj.Mem3[i1 + 3], obj.Mem2[i1 + 3], obj.Mem1[i1 + 3]) + 0
             cell_16 = concat(obj.Mem4[i1 + 4], obj.Mem3[i1 + 4], obj.Mem2[i1 + 4], obj.Mem1[i1 + 4]) + 0
             cell_20 = concat(obj.Mem4[i1 + 5], obj.Mem3[i1 + 5], obj.Mem2[i1 + 5], obj.Mem1[i1 + 5]) + 0
             cell_24 = concat(obj.Mem4[i1 + 6], obj.Mem3[i1 + 6], obj.Mem2[i1 + 6], obj.Mem1[i1 + 6]) + 0
             cell_28 = concat(obj.Mem4[i1 + 7], obj.Mem3[i1 + 7], obj.Mem2[i1 + 7], obj.Mem1[i1 + 7]) + 0
-            print("| %5s | %10s | %10s | %10s | %10s | %10s | %10s | %10s | %10s |" %(address_p, cell_0, cell_4, cell_8, cell_12, cell_16, cell_20, cell_24, cell_28))
-            print("|-------+------------+------------+------------+------------+------------+------------+------------+------------|")
+            print("| %5s | %10s | %10s | %10s | %10s | %10s | %10s | %10s | %10s |" % (address_p, cell_0, cell_4, cell_8
+                                                                                       , cell_12, cell_16, cell_20,
+                                                                                       cell_24, cell_28))
+            print("|-------+------------+------------+------------+------------+------------+------------+------------+"
+                  "------------|")
             address_p += 32
             i1 += 8
 
         print("\n===== Register File =====")
-        name_list = ["Zero","ra","sp","gp","tp","t0","t1","t2","s0","s1","a0","a1","a2","a3","a4","a5","a6","a7","s2","s3","s4","s5","s6","s7","s8","s9","s10","s11","t3","t4","t5","t6"]
+        name_list = ["Zero", "ra", "sp", "gp", "tp", "t0", "t1", "t2", "s0", "s1", "a0", "a1", "a2", "a3", "a4", "a5",
+                     "a6", "a7", "s2", "s3", "s4", "s5", "s6", "s7", "s8", "s9", "s10", "s11", "t3", "t4", "t5", "t6"]
         print("| Name | Number | Value |")
         print("|======|========|=======|")
         for i in range(32):
-            print("| %-5s| %5s  | %5s |" % (name_list[i],i, obj.copy_register[i]+0))
+            print("| %-5s| %5s  | %5s |" % (name_list[i], i, obj.copy_register[i] + 0))
             print("|------+--------+-------|")
+
     return instances()
 
 
 test = test_bench()
 test.run_sim()
-
