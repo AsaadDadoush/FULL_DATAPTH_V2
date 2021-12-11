@@ -104,7 +104,9 @@ def testbench():
 
     @instance
     def stimulus():
-        print("A   OP  B  = Out | selection")
+        print('=' * 35)
+        print("| A | Operation | B  |     Out    |")
+        print("|===+===========+====+============|")
         for i in range(17):
             a.next, b.next, sel.next = 5, 20, i
             yield delay(5)
@@ -146,10 +148,9 @@ def testbench():
                 operation = " % "
             else:
                 operation = " % (U)"
-            print("Sel: ",sel+0)
             yield delay(1)
-            print("%s %s %s = %s " % (a + 0, operation, b + 0, out + 0))
-            print('='*20)
+            print("| %s | %-9s | %s |  %-9s | " % (a + 0, operation, b + 0, out + 0))
+            print("|---+-----------+----+------------|")
     return instances()
 
 
@@ -162,6 +163,6 @@ def convert():
     ins.convert(hdl='Verilog')
 
 
-tb = testbench()
-tb.run_sim()
-convert()
+# tb = testbench()
+# tb.run_sim()
+# convert()
