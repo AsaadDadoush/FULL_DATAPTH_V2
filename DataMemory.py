@@ -4,38 +4,49 @@ import control
 from memory import Memory
 from mem import to_number
 ProgramData = Memory()
-ProgramData.load_binary_file(path="C:/Users/asaad/Desktop/test2/Bsort_text.txt", starting_address=0)
-ProgramData.load_binary_file(path="C:/Users/asaad/Desktop/test2/Bsort_data.txt", starting_address=8192)
+ProgramData.load_binary_file(path="D:/binary_file/t1.txt", starting_address=0)
+ProgramData.load_binary_file(path="D:/binary_file/d1.txt", starting_address=8192)
 
 
 @block
-def DataMemory(data_in, enable, size, address, data_out, clk):
+def DataMemory(data_in, enable, size, address, data_out, clk, load_data,load_address):
     Mem1 = [Signal(intbv(0)[8:]) for i in range(3072)]
     Mem2 = [Signal(intbv(0)[8:]) for i in range(3072)]
     Mem3 = [Signal(intbv(0)[8:]) for i in range(3072)]
     Mem4 = [Signal(intbv(0)[8:]) for i in range(3072)]
-    address_index = 0
-    for i in range(3072):
-        data = Signal(intbv(to_number(ProgramData.read(address_index, 4), 4, True))[32:])
-        Mem1[i].next = data[8:]
-        Mem1[i]._update()
-        Mem2[i].next = data[16:8]
-        Mem2[i]._update()
-        Mem3[i].next = data[24:16]
-        Mem3[i]._update()
-        Mem4[i].next = data[32:24]
-        Mem4[i]._update()
-        address_index += 4
-    print("******************** Data memory is done loading ********************")
-    print("============================ Data Memory ============================")
-    print("Checking Process...")
-    print("data saved in 8192= ", bin(Mem4[2048].next, 8), bin(Mem3[2048].next, 8),
-          bin(Mem2[2048].next, 8), bin(Mem1[2048].next, 8))
+    # address_index = 0
+    # for i in range(3072):
+    #     data = Signal(intbv(to_number(ProgramData.read(address_index, 4), 4, True))[32:])
+    #     Mem1[i].next = data[8:]
+    #     Mem1[i]._update()
+    #     Mem2[i].next = data[16:8]
+    #     Mem2[i]._update()
+    #     Mem3[i].next = data[24:16]
+    #     Mem3[i]._update()
+    #     Mem4[i].next = data[32:24]
+    #     Mem4[i]._update()
+    #     address_index += 4
+    # print("******************** Data memory is done loading ********************")
+    # print("============================ Data Memory ============================")
+    # print("Checking Process...")
+    # print("data saved in 8192= ", bin(Mem4[2048].next, 8), bin(Mem3[2048].next, 8),
+    #       bin(Mem2[2048].next, 8), bin(Mem1[2048].next, 8))
+
+    @always(load_address)
+    def load_logic():
+        Mem1[load_address].next = load_data[8:]
+        Mem2[load_address].next = load_data[16:8]
+        Mem3[load_address].next = load_data[24:16]
+        Mem4[load_address].next = load_data[32:24]
+        control.obj.Mem1 = Mem1
+        control.obj.Mem2 = Mem2
+        control.obj.Mem3 = Mem3
+        control.obj.Mem4 = Mem4
 
     @always_seq(clk.posedge, reset=None)
     def Write_logic():
         if address < 0:
-            data.next = 0
+            data_in.next = 0
         translated_address = (int(address/4))
 
         if enable == 1:
@@ -60,6 +71,8 @@ def DataMemory(data_in, enable, size, address, data_out, clk):
         control.obj.Mem2 = Mem2
         control.obj.Mem3 = Mem3
         control.obj.Mem4 = Mem4
+        # print("data saved in 8192= ", bin(Mem4[2048].next, 8), bin(Mem3[2048].next, 8),
+        #       bin(Mem2[2048].next, 8), bin(Mem1[2048].next, 8))
 
     @always_comb
     def Read_logic():

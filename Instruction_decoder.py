@@ -4,7 +4,7 @@ from myhdl import *
 @block
 def ins_dec(data_in, opcode, rd, func3, rs1, rs2, func7, immI, immS, immB, immU, immJ):
 
-    @always(data_in)
+    @always_comb
     def decoder():
         opcode.next = data_in[7:0]  # opcode
         func3.next = data_in[15:12]  # func3

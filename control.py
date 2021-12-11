@@ -1,38 +1,14 @@
-import opcode
-
+from Sys_call import sys_Call
 from myhdl import *
 
 
 # from DataMemory import copy_Mem1,copy_Mem2,copy_Mem3,copy_Mem4
 
-
-def sys_Call(copy_register, copy_Mem1, copy_Mem2, copy_Mem3, copy_Mem4):
-    print("Reg[17]: ", copy_register[17] + 0)
-    if copy_register[17] == 93:
-        for i in range(len(copy_register)):
-            print("Reg[%s]: %s" % (i, copy_register[i]+0))
-        raise StopSimulation
-    elif copy_register[17] == 64:
-        for i in range(len(copy_register)):
-            print("Reg[%s]: %s" % (i, copy_register[i]+0))
-        if copy_register[10] == 1:
-            base_address = copy_register[11]
-            translated_address = int(copy_register[12] / 4)
-            print(copy_Mem1[translated_address]+0)
-            for i in range(translated_address):
-                translated_address = int(copy_register[12] / 4)
-                print(copy_Mem4[translated_address] + copy_Mem3[translated_address] + copy_Mem2[translated_address] +
-                      copy_Mem1[translated_address] + 0)
-                base_address = base_address + 1
-
-
-
 @block
-def control(opcode, func3, func7, branch_result, size_sel, operation_sel, enable_write, PC_genrator_sel, imm_sel,
+def control(opcode, func3, func7,  size_sel, operation_sel, enable_write, PC_genrator_sel, imm_sel,
             rs2_or_imm_or_4, PC_or_rs1, ALU_or_load_or_immShiftedBy12, Shift_amount, Enable_Reg, sign_selection):
-    @always(opcode, func7, func3)
+    @always_comb
     def control_cir():
-        print("============================== Control ==============================")
         # R-type
         if opcode == 0b0110011:
             PC_or_rs1.next = 1
@@ -41,7 +17,7 @@ def control(opcode, func3, func7, branch_result, size_sel, operation_sel, enable
             ALU_or_load_or_immShiftedBy12.next = 0
             PC_genrator_sel.next = 3
             Enable_Reg.next = 1
-            print("R-type")
+
             # ADD
             if func3 == 0x0 and func7 == 0x00:
                 operation_sel.next = 0
@@ -113,7 +89,7 @@ def control(opcode, func3, func7, branch_result, size_sel, operation_sel, enable
             imm_sel.next = 0
             Shift_amount.next = 2
             Enable_Reg.next = 1
-            print("I-type")
+
             # Add imm
             if func3 == 0x0:
                 operation_sel.next = 0
@@ -154,7 +130,7 @@ def control(opcode, func3, func7, branch_result, size_sel, operation_sel, enable
                 PC_genrator_sel.next = 3
         # I-type (LOAD instructions)
         elif opcode == 0b0000011:
-            print("I-type (LOAD instructions)")
+
             operation_sel.next = 0
             enable_write.next = 0
             PC_genrator_sel.next = 3
@@ -191,7 +167,7 @@ def control(opcode, func3, func7, branch_result, size_sel, operation_sel, enable
 
         # S-Type
         elif opcode == 0b0100011:
-            print("S-type")
+
             operation_sel.next = 0
             PC_genrator_sel.next = 3
             enable_write.next = 1
@@ -248,7 +224,7 @@ def control(opcode, func3, func7, branch_result, size_sel, operation_sel, enable
 
         # J-type (Jump And Link)
         elif opcode == 0b1101111:
-            print("Jump And Link")
+
             operation_sel.next = 0
             PC_genrator_sel.next = 1
             enable_write.next = 0
@@ -261,7 +237,7 @@ def control(opcode, func3, func7, branch_result, size_sel, operation_sel, enable
 
         # I-type (Jump And Link Reg)
         elif opcode == 0b1100111:
-            print("Jump And Link Reg")
+
             operation_sel.next = 0
             PC_genrator_sel.next = 2
             enable_write.next = 0
@@ -272,7 +248,7 @@ def control(opcode, func3, func7, branch_result, size_sel, operation_sel, enable
             Enable_Reg.next = 1
         # U-type (Load Upper Imm)
         elif opcode == 0b0110111:
-            print("Load Upper Imm")
+
             PC_genrator_sel.next = 3
             enable_write.next = 0
             ALU_or_load_or_immShiftedBy12.next = 2
@@ -282,11 +258,10 @@ def control(opcode, func3, func7, branch_result, size_sel, operation_sel, enable
         # Ecall
         elif opcode == 0b1110011:
             Enable_Reg.next = 0
-            print("Ecall")
             sys_Call(obj.copy_register, obj.Mem1, obj.Mem2, obj.Mem3, obj.Mem4)
         # U-type (Add Upper Imm to PC)
         else:
-            print("Add Upper Imm to PC")
+
             operation_sel.next = 0
             enable_write.next = 0
             Shift_amount.next = 1

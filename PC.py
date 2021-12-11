@@ -1,18 +1,11 @@
-from myhdl import*
+from myhdl import *
+
 
 @block
-def pc(pass_input, out, clk, reset):
-    @always(clk.posedge)
+def pc(pass_input, out, clk, reset,flag):
+    @always_seq(clk.posedge, reset=reset)
     def pcblock():
-        print("reset: ", reset + 0)
-        if reset:
-            out.next = 0
-            reset.next = 0
-        else:
+        if flag == 1:
             out.next = pass_input
-        print("****************************** Fetching *****************************")
-        print("================================= PC ================================")
-        print("Data  in: ", pass_input + 0)
-        print("Data out: ", out.next+0)
-        print("")
+
     return instances()

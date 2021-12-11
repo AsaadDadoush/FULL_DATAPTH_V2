@@ -20,12 +20,4 @@ def PC_gen(PC, rs1, imm, sel, out, alu_out):
             out.next = PC+4
 
 
-        # print("=============================== PC_gen ==============================")
-        # print("PC  (input 1): ", PC + 0)
-        # print("imm (input 2): ", imm + 0)
-        # print("Rs1 (input 3): ", rs1+0)
-        # print("Selection: ", sel + 0)
-        # print("Output: ", out.next + 0)
-        # print("")
-
     return instances()
