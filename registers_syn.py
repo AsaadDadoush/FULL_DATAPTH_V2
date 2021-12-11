@@ -3,7 +3,7 @@ import control
 
 
 @block
-def registers(rs1, rs2, rd, rs1_out, rs2_out, enable, DataWrite, clk):
+def registers_syn(rs1, rs2, rd, rs1_out, rs2_out, enable, DataWrite, clk):
     Reg = [Signal(intbv(0, min=-2 ** 31, max=2 ** 31)) for i in range(32)]
 
     @always_comb
@@ -28,7 +28,7 @@ def testbench():
     enable = Signal(bool(0))
     clk = Signal(bool(0))
     DataWrite = Signal(intbv(0)[32:])
-    reg = registers(rs1, rs2, rd, rs1_out, rs2_out, enable, DataWrite, clk)
+    reg = registers_syn(rs1, rs2, rd, rs1_out, rs2_out, enable, DataWrite, clk)
 
     @always(delay(2))
     def gen_clk():
@@ -85,10 +85,10 @@ def convert():
     enable = Signal(bool(0))
     clk = Signal(bool(0))
     DataWrite = Signal(intbv(0)[32:])
-    reg = registers(rs1, rs2, rd, rs1_out, rs2_out, enable, DataWrite, clk)
+    reg = registers_syn(rs1, rs2, rd, rs1_out, rs2_out, enable, DataWrite, clk)
     reg.convert(hdl='Verilog')
 
 
-convert()
-tst = testbench()
-tst.run_sim(50)
+# convert()
+# tst = testbench()
+# tst.run_sim(50)
