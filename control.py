@@ -1,11 +1,9 @@
-from Sys_call import sys_Call
+from Sys_call import obj, sys_Call
 from myhdl import *
 
 
-# from DataMemory import copy_Mem1,copy_Mem2,copy_Mem3,copy_Mem4
-
 @block
-def control(opcode, func3, func7,  size_sel, operation_sel, enable_write, PC_genrator_sel, imm_sel,
+def control(opcode, func3, func7, size_sel, operation_sel, enable_write, PC_genrator_sel, imm_sel,
             rs2_or_imm_or_4, PC_or_rs1, ALU_or_load_or_immShiftedBy12, Shift_amount, Enable_Reg, sign_selection):
     @always_comb
     def control_cir():
@@ -273,15 +271,3 @@ def control(opcode, func3, func7,  size_sel, operation_sel, enable_write, PC_gen
             PC_genrator_sel.next = 3
 
     return instances()
-
-
-class copy:
-    def __init__(self):
-        self.copy_register = []
-        self.Mem1 = []
-        self.Mem2 = []
-        self.Mem3 = []
-        self.Mem4 = []
-
-
-obj = copy()
