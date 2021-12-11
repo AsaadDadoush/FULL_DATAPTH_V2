@@ -1,6 +1,16 @@
 import math
 from myhdl import *
 
+class copy:
+    def __init__(self):
+        self.copy_register = []
+        self.Mem1 = []
+        self.Mem2 = []
+        self.Mem3 = []
+        self.Mem4 = []
+
+
+obj = copy()
 
 def sys_Call(copy_register, Mem1, Mem2, Mem3, Mem4):
     if copy_register[17] == 93:
