@@ -34,7 +34,7 @@ def testbench():
     i4 = Signal(intbv(0)[32:])
     sel = Signal(intbv(0)[3:])
     out = Signal(intbv(0)[32:])
-    ins = mux8_1(i0, i1, i2, i3, i4, out, sel)
+    ins = mux5_1(i0, i1, i2, i3, i4, out, sel)
 
     @instance
     def monitor():
@@ -56,10 +56,10 @@ def convert():
     i4 = Signal(intbv(0)[32:])
     sel = Signal(intbv(0)[3:])
     out = Signal(intbv(0)[32:])
-    ins = mux8_1(i0, i1, i2, i3, i4, out, sel)
+    ins = mux5_1(i0, i1, i2, i3, i4, out, sel)
     ins.convert(hdl='Verilog')
 
 
-tst = testbench()
-tst.run_sim()
-convert()
+# tst = testbench()
+# tst.run_sim()
+# convert()
