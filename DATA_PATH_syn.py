@@ -1,7 +1,7 @@
 from myhdl import *
 
 from ALU import alu
-from Sys_call import obj
+# from Sys_call import obj
 from control_syn import control_syn
 from extender import extender
 from Instruction_decoder import ins_dec
@@ -18,13 +18,13 @@ from sign_extend import sign_extender
 from InstructionMemory_syn import InstructionMemory_syn
 from DataMemory_syn import DataMemory_syn
 
-Program = Memory()
-Program.load_binary_file(path="D:/binary_file/t1.txt", starting_address=0)
-Program.load_binary_file(path="D:/binary_file/d1.txt", starting_address=8192)
+# Program = Memory()
+# Program.load_binary_file(path="D:/binary_file/t1.txt", starting_address=0)
+# Program.load_binary_file(path="D:/binary_file/d1.txt", starting_address=8192)
 
 
 @block
-def top_level(Constant_4, clk,  load_ins, load_data, load_address, flag):
+def top_level(Constant_4, clk,  reset,load_ins, load_data, load_address, flag):
     # ======================= Lines ======================= #
     gen_to_PC, pc_out, imm_sel, signed_extnetion_output, Data_Memory_out, alu_out, Instruction_Memory_out, \
     input_for_shifter = [Signal(intbv(0)[32:]) for i in range(8)]
@@ -43,7 +43,7 @@ def top_level(Constant_4, clk,  load_ins, load_data, load_address, flag):
     shifter_out = Signal(modbv(0, min=-2 ** 31, max=2 ** 31))
 
     # ======================= ins section ======================= #
-    PC = pc(gen_to_PC, pc_out, clk, flag)  # PC
+    PC = pc(gen_to_PC, pc_out, clk, reset, flag)  # PC
     # Main_memory = memory(rs2_out, enable_write, size_sel, pc_out, alu_out, Instruction_Memory_out)
     Instruction_Memory = InstructionMemory_syn(load_ins, load_address, pc_out, Instruction_Memory_out, clk)
     Data_Memory = DataMemory_syn(rs2_out, enable_write, size_sel, alu_out, Data_Memory_out, clk, load_data, load_address)
@@ -72,11 +72,11 @@ def convert():
     Constant_4 = Signal(intbv(4)[32:])
     load_ins = Signal(intbv(0)[32:])
     load_data = Signal(intbv(0)[32:])
+    reset = ResetSignal(0, active=1, isasync=False)
     load_address = Signal(intbv(0)[32:])
     flag = Signal(bool(0))
-    ins = top_level(Constant_4, clk, load_ins, load_data, load_address, flag)
+    ins = top_level(Constant_4, clk, reset, load_ins, load_data, load_address, flag)
     ins.convert(hdl='Verilog')
-
 
 convert()
 

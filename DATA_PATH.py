@@ -1,5 +1,4 @@
 from myhdl import *
-
 from ALU import alu
 from Sys_call import obj
 from control import control
@@ -24,7 +23,7 @@ Program.load_binary_file(path="D:/binary_file/d1.txt", starting_address=8192)
 
 
 @block
-def top_level(Constant_4, clk,  load_ins, load_data, load_address, flag):
+def top_level(Constant_4, clk,  reset,load_ins, load_data, load_address, flag):
     # ======================= Lines ======================= #
     gen_to_PC, pc_out, imm_sel, signed_extnetion_output, Data_Memory_out, alu_out, Instruction_Memory_out, \
     input_for_shifter = [Signal(intbv(0)[32:]) for i in range(8)]
@@ -43,7 +42,7 @@ def top_level(Constant_4, clk,  load_ins, load_data, load_address, flag):
     shifter_out = Signal(modbv(0, min=-2 ** 31, max=2 ** 31))
 
     # ====================== ins section ======================= #
-    PC = pc(gen_to_PC, pc_out, clk, flag)  # PC
+    PC = pc(gen_to_PC, pc_out, clk, reset, flag)  # PC
     Instruction_Memory = InstructionMemory(load_ins, load_address, pc_out, Instruction_Memory_out, clk)
     Data_Memory = DataMemory(rs2_out, enable_write, size_sel, alu_out, Data_Memory_out, clk, load_data, load_address)
     Decode = ins_dec(Instruction_Memory_out, opcode, rd, func3, rs1, rs2, func7, immI, immS, immB, immU,
@@ -68,13 +67,13 @@ def top_level(Constant_4, clk,  load_ins, load_data, load_address, flag):
 @block
 def test_bench():
     clk = Signal(bool(0))
-    reset = ResetSignal(1, active=1, isasync=True)
     Constant_4 = Signal(intbv(4)[32:])
     load_ins = Signal(intbv(0)[32:])
     load_data = Signal(intbv(0)[32:])
+    reset = ResetSignal(0, active=1, isasync=False)
     load_address = Signal(intbv(0)[32:])
     flag = Signal(bool(0))
-    ins = top_level(Constant_4, clk, load_ins, load_data, load_address, flag)
+    ins = top_level(Constant_4, clk,reset, load_ins, load_data, load_address, flag)
 
     @always(delay(14000))
     def gen_clk():
@@ -83,22 +82,17 @@ def test_bench():
     @instance
     def loading():
         translated_address = 0
-        print(" Wait Loading ....", end="\n\n")
+        print("\n # Wait Loading ....", end="\n\n")
         for i in range(3072):
             load_address.next = i
             load_ins.next = intbv(to_number(Program.read(translated_address, 4), 4, True))[32:]
             load_data.next = intbv(to_number(Program.read(translated_address, 4), 4, True))[32:]
             yield clk.posedge
             translated_address += 4
-        print("========================== loading is done ==========================", end="\n\n")
 
-        reset.next = 0
-        flag.next = 1
-        yield clk.posedge
-        # cell_0 = concat(obj.Mem4[i], obj.Mem3[i], obj.Mem2[i], obj.Mem1[i]) + 0
-        # cell_4 = concat(obj.Mem4[i + 1], obj.Mem3[i + 1], obj.Mem2[i + 1], obj.Mem1[i + 1]) + 0
-        # cell_8 = concat(obj.Mem4[i + 2], obj.Mem3[i + 2], obj.Mem2[i + 2], obj.Mem1[i + 2]) + 0
-        # cell_16 = concat(obj.Mem4[i + 3], obj.Mem3[i + 3], obj.Mem2[i + 3], obj.Mem1[i + 3]) + 0
+        load_address.next = 2000
+        print(" # loading is done ", end="\n\n")
+
         print("===================================================== Memory =================="
               "==================================")
         print("|Address|     +0     |     +4     |     +8     |     +12    |     +16    |     +20    |    "
@@ -132,9 +126,13 @@ def test_bench():
         for i in range(32):
             print("| %-5s| %5s  | %5s |" % (name_list[i], i, obj.copy_register[i] + 0))
             print("|------+--------+-------|")
+        flag.next = 1
+        yield clk.posedge
+        reset.next = 1
+        yield clk.posedge
+        reset.next = 0
+        yield clk.posedge
 
     return instances()
 
 
-test = test_bench()
-test.run_sim()
