@@ -2,8 +2,8 @@ from myhdl import *
 
 
 @block
-def pc(data_in, out, clk,flag):
-    @always(clk.posedge)
+def pc(data_in, out, clk, reset, flag):
+    @always_seq(clk.posedge, reset=reset)
     def pcblock():
         if flag == 1:
             out.next = data_in
