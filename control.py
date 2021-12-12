@@ -259,7 +259,6 @@ def control(opcode, func3, func7, size_sel, operation_sel, enable_write, PC_genr
             sys_Call(obj.copy_register, obj.Mem1, obj.Mem2, obj.Mem3, obj.Mem4)
         # U-type (Add Upper Imm to PC)
         else:
-
             operation_sel.next = 0
             enable_write.next = 0
             Shift_amount.next = 1

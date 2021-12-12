@@ -1,4 +1,4 @@
-from Sys_call import sys_Call
+# from Sys_call import sys_Call
 from myhdl import *
 
 
