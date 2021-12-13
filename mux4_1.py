@@ -6,15 +6,13 @@ randrange = random.randrange
 
 
 @block
-def mux_3to1(i0, i1, i2, sel, out):
+def mux_4to1(i0, i1, i2, sel, out):
     @always_comb
     def mux3to1():
         if sel == 0:
             out.next = i0
         elif sel == 1:
             out.next = i1
-        elif sel == 2:
-            out.next = i2
         else:
             out.next = i2
 
@@ -27,7 +25,7 @@ def tb():
     i2 = Signal(intbv(0)[32:])
     sel = Signal(intbv(0)[2:])
     out = Signal(intbv(0)[32:])
-    mux = mux_3to1(i0, i1, i2, sel, out)
+    mux = mux_4to1(i0, i1, i2, sel, out)
 
     @instance
     def stimulus():
@@ -47,7 +45,7 @@ def convert():
     i2 = Signal(intbv(0)[32:])
     sel = Signal(intbv(0)[2:])
     out = Signal(intbv(0)[32:])
-    mux = mux_3to1(i0, i1, i2, sel, out)
+    mux = mux_4to1(i0, i1, i2, sel, out)
     mux.convert(hdl='Verilog')
 
 

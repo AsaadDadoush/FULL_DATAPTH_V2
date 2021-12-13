@@ -2,10 +2,9 @@ from myhdl import *
 from Sys_call import obj
 from memory import to_number, Memory
 
-program = Memory()
-program.load_binary_file(path="C:/Users/asaad/Desktop/test2/V2Code", starting_address=0)
-program.load_binary_file(path="C:/Users/asaad/Desktop/test2/V2Data", starting_address=8192)
-
+Program = Memory()
+Program.load_binary_file(path="C:/Users/asaad/Desktop/test2/Bsort_text.txt", starting_address=0)
+Program.load_binary_file(path="C:/Users/asaad/Desktop/test2/Bsort_data.txt", starting_address=8192)
 
 
 @block
@@ -89,7 +88,6 @@ def test_bench():
 
     @instance
     def stimulus():
-        size.next = 2
         print("=" * 44)
         print("|address |    load data    |    data out   |")
         print("=" * 44)
@@ -98,12 +96,11 @@ def test_bench():
         for i in range(3072):
             size.next = 2
             yield delay(1)
-            address.next = i
             load_address.next = i
-            load_data.next = intbv(to_number(program.read(address_counter, 4), 4, True))[32:]
+            load_data.next = intbv(to_number(Program.read(address_counter, 4), 4, True))[32:]
             address_counter += 4
             yield delay(6)
-            print("| %-6s | %-15s | %-14s|" % (i * 4, load_data + 0, data_out.next + 0))
+            print("| %-5s | %-15s | %-15s|" % (i * 4, load_data + 0, data_out.next + 0))
             print("=" * 44)
         print("\n\n\n")
         print("=" * 44)
@@ -114,7 +111,7 @@ def test_bench():
         print("=" * 58)
         print("|address |    load data    |     data out    |    Size   |")
         #################################
-        size.next = 2
+        size.next = 0
         yield clk.posedge
         if size.next == 0:
             temp = "Byte"
@@ -127,10 +124,11 @@ def test_bench():
         for i in range(3072):
             address.next = i
             yield clk.posedge
-            print("| %-6s | %-14s  | %-16s| %-9s |" % (address.next * 4, load_data + 0, data_out.next + 0, temp))
+            print("| %-6s | %-15s  | %-15s| %-9s |" % (address.next * 4, load_data + 0, data_out.next + 0, temp))
             print("=" * 58)
 
     return instances()
+
 
 def convert():
     data_in = Signal(intbv(0, min=-2 ** 31, max=2 ** 31)[32:])
@@ -145,6 +143,6 @@ def convert():
     ins.convert(hdl='Verilog')
 
 
-test = test_bench()
-test.run_sim(100000)
+# test = test_bench()
+# test.run_sim(100000)
 # convert()

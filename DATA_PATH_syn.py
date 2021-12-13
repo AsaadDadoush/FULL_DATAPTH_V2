@@ -1,15 +1,14 @@
 from myhdl import *
 
 from ALU import alu
-# from Sys_call import obj
 from control_syn import control_syn
 from extender import extender
 from Instruction_decoder import ins_dec
 from memory import to_number
 from memory import Memory
 from mux2_1 import mux2_1
-from mux3_1 import mux_3to1
-from mux5_1 import mux5_1
+from mux4_1 import mux_4to1
+from mux8_1 import mux_8to1
 from PC import pc
 from PC_genrator import PC_gen
 from registers_syn import registers_syn
@@ -55,11 +54,11 @@ def top_level(Constant_4, clk,  reset,load_ins, load_data, load_address, flag):
     Reg = registers_syn(rs1, rs2, rd, rs1_out, rs2_out, Enable_Reg, data_in_Reg, clk)  # Reg
 
     ext = extender(immI, immS, immB, immU, immJ, imm32I, imm32S, imm32B, imm32U, imm32J)  # extend for imm
-    mux_Reg = mux_3to1(alu_out, signed_extnetion_output, shifter_out, ALU_or_load_or_immShiftedBy12,
+    mux_Reg = mux_4to1(alu_out, signed_extnetion_output, shifter_out, ALU_or_load_or_immShiftedBy12,
                        data_in_Reg)  # mux for Reg file
-    mux_imm = mux5_1(imm32I, imm32S, imm32B, imm32U, imm32J, input_for_shifter, imm_sel)  # mux imm to shift
+    mux_imm = mux_8to1(imm32I, imm32S, imm32B, imm32U, imm32J, input_for_shifter, imm_sel)  # mux imm to shift
     shift = shifter(input_for_shifter, Shift_amount, shifter_out)  # shifter for imm
-    mux_b = mux_3to1(rs2_out, shifter_out, Constant_4, rs2_or_imm_or_4, b)  # mux imm rs2 4
+    mux_b = mux_4to1(rs2_out, shifter_out, Constant_4, rs2_or_imm_or_4, b)  # mux imm rs2 4
     mux_a = mux2_1(PC_or_rs1, a, pc_out, rs1_out)  # mux PC rs1
     ALU = alu(a, b, operation_sel, alu_out)  # ALU
     gen = PC_gen(pc_out, rs1_out, shifter_out, PC_genrator_sel, gen_to_PC, alu_out)  # PC gen
