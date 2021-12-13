@@ -2,8 +2,8 @@ from myhdl import *
 from memory import to_number, number_to_Buff, Memory
 
 program = Memory()
-program.load_binary_file(path="C:/Users/asaad\Desktop/test2/V2Code", starting_address=0)
-program.load_binary_file(path="C:/Users/asaad\Desktop/test2/V2Data", starting_address=8192)
+program.load_binary_file(path="C:/Users/asaad/Desktop/test2/V2Code", starting_address=0)
+program.load_binary_file(path="C:/Users/asaad/Desktop/test2/V2Data", starting_address=8192)
 
 
 @block
