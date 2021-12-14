@@ -14,6 +14,12 @@ def mux_8to1(i0, i1, i2, i3, i4, out, sel):
             out.next = i2
         elif sel == 3:
             out.next = i3
+        elif sel == 4:
+            out.next = i4
+        elif sel == 5:
+            out.next = i4
+        elif sel == 6:
+            out.next = i4
         else:
             out.next = i4
     return mux

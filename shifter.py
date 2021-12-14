@@ -9,6 +9,8 @@ def shifter(data_in, sel, data_out):
             data_out.next = data_in.signed() << 1
         elif sel == 1:
             data_out.next = data_in.signed() << 12
+        elif sel == 2:
+            data_out.next = data_in.signed()
         else:
             data_out.next = data_in.signed()
 

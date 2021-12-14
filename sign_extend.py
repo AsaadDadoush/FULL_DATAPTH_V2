@@ -13,6 +13,8 @@ def sign_extender(data_in, sel, data_out):
             data_out.next = intbv(data_in[8:]).signed()[32:]
         elif sel == 1:
             data_out.next = intbv(data_in[16:]).signed()[32:]
+        elif sel == 2:
+            data_out.next = data_in
         else:
             data_out.next = data_in
 

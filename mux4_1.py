@@ -8,15 +8,17 @@ randrange = random.randrange
 @block
 def mux_4to1(i0, i1, i2, sel, out):
     @always_comb
-    def mux3to1():
+    def mux4to1():
         if sel == 0:
             out.next = i0
         elif sel == 1:
             out.next = i1
+        elif sel == 2:
+            out.next = i2
         else:
             out.next = i2
 
-    return mux3to1
+    return mux4to1
 
 @block
 def tb():

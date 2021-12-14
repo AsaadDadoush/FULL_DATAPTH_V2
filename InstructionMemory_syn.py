@@ -3,8 +3,8 @@ from myhdl import *
 from memory import to_number, Memory
 
 Program = Memory()
-Program.load_binary_file(path="C:/Users/asaad/Desktop/test2/Bsort_text.txt", starting_address=0)
-Program.load_binary_file(path="C:/Users/asaad/Desktop/test2/Bsort_data.txt", starting_address=8192)
+Program.load_binary_file(path="D:/Study/ENG/7th/361/FinalProject/BsortT", starting_address=0)
+Program.load_binary_file(path="D:/Study/ENG/7th/361/FinalProject/BsortD", starting_address=8192)
 
 
 @block
