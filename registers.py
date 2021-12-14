@@ -25,10 +25,6 @@ def registers(rs1, rs2, rd, rs1_out, rs2_out, enable, DataWrite, clk):
             Reg[rd]._update()
             Reg[0].next = 0
             Reg[0]._update()
-            Reg[2] = Signal(intbv(10016)[32:])
-            Reg[2]._update()
-            Reg[3] = Signal(intbv(6144)[32:])
-            Reg[3]._update()
             obj.copy_register = Reg
 
     return instances()
