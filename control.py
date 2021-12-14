@@ -270,3 +270,4 @@ def control(opcode, func3, func7, size_sel, operation_sel, enable_write, PC_genr
             PC_genrator_sel.next = 3
 
     return instances()
+

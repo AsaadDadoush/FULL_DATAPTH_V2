@@ -49,6 +49,6 @@ def convert():
     ins = pc(data_in, out, clk, reset, flag)
     ins.convert(hdl='Verilog')
 
-convert()
+# convert()
 # tb=test()
 # tb.run_sim(500)

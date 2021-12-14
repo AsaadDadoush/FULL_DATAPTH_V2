@@ -54,6 +54,7 @@ def convert():
     ins.convert(hdl='Verilog')
 
 
-tst = testbench()
-tst.run_sim()
-convert()
+# tst = testbench()
+# tst.run_sim()
+# convert()
+

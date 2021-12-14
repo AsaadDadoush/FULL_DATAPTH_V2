@@ -59,3 +59,4 @@ def DataMemory(data_in, enable, size, address, data_out, clk, load_data, load_ad
                                    Mem1[translated_address])
 
     return instances()
+

@@ -45,6 +45,7 @@ def convert():
     mux.convert(hdl='Verilog')
 
 
-convert()
+# convert()
 # tst = testbench()
 # tst.run_sim()
+

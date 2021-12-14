@@ -88,6 +88,6 @@ def convert():
     reg.convert(hdl='Verilog')
 
 
-convert()
+# convert()
 # tst = testbench()
 # tst.run_sim(50)

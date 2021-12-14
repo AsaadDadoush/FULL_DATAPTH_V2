@@ -28,3 +28,4 @@ def registers(rs1, rs2, rd, rs1_out, rs2_out, enable, DataWrite, clk):
             obj.copy_register = Reg
 
     return instances()
+
