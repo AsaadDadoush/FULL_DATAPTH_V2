@@ -8,12 +8,7 @@ def alu(a, b, sel, out):
     def alu():
         # ADD
         if sel == 0:
-            v = a.signed() + b.signed()
-            if v < 0:
-                out.next = 0
-            else:
-                out.next = v
-
+            out.next = a.signed() + b.signed()
         # MULTIPLY
         elif sel == 1:
             out.next = a.signed() * b.signed()
