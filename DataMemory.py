@@ -34,17 +34,11 @@ def DataMemory(data_in, enable, size, address, data_out, clk, load_data, load_ad
                 Mem1[translated_address].next = data_in[8:0]
                 Mem2[translated_address].next = data_in[16:8]
 
-            # elif size == 2:
-            #     Mem1[translated_address].next = data_in[8:0]
-            #     Mem2[translated_address].next = data_in[16:8]
-            #     Mem3[translated_address].next = data_in[24:16]
-            #     Mem4[translated_address].next = data_in[32:24]
             else:
                 Mem1[translated_address].next = data_in[8:0]
                 Mem2[translated_address].next = data_in[16:8]
                 Mem3[translated_address].next = data_in[24:16]
                 Mem4[translated_address].next = data_in[32:24]
-
 
         obj.Mem1 = Mem1
         obj.Mem2 = Mem2
