@@ -80,12 +80,6 @@ def alu(a, b, sel, out):
         else:
             out.next = a.signed() % b[32:]
 
-        # print("================================ ALU ================================")
-        # print("a: ", a+0, " b: ", b+0)
-        # print("Operation: ", sel + 0)
-        # # print("ALU out: ", out.next+0)
-        # print("")
-
     return alu
 
 @block
