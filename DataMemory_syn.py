@@ -88,6 +88,7 @@ def test_bench():
 
     @instance
     def stimulus():
+        size.next = 2
         print("=" * 44)
         print("|address |    load data    |    data out   |")
         print("=" * 44)
@@ -96,11 +97,12 @@ def test_bench():
         for i in range(3072):
             size.next = 2
             yield delay(1)
+            address.next = i
             load_address.next = i
             load_data.next = intbv(to_number(Program.read(address_counter, 4), 4, True))[32:]
             address_counter += 4
             yield delay(6)
-            print("| %-5s | %-15s | %-15s|" % (i * 4, load_data + 0, data_out.next + 0))
+            print("| %-6s | %-15s | %-14s|" % (i * 4, load_data + 0, data_out.next + 0))
             print("=" * 44)
         print("\n\n\n")
         print("=" * 44)
@@ -111,7 +113,7 @@ def test_bench():
         print("=" * 58)
         print("|address |    load data    |     data out    |    Size   |")
         #################################
-        size.next = 0
+        size.next = 2
         yield clk.posedge
         if size.next == 0:
             temp = "Byte"
@@ -124,7 +126,7 @@ def test_bench():
         for i in range(3072):
             address.next = i
             yield clk.posedge
-            print("| %-6s | %-15s  | %-15s| %-9s |" % (address.next * 4, load_data + 0, data_out.next + 0, temp))
+            print("| %-6s | %-14s  | %-16s| %-9s |" % (address.next * 4, load_data + 0, data_out.next + 0, temp))
             print("=" * 58)
 
     return instances()

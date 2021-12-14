@@ -7,7 +7,6 @@ Program.load_binary_file(path="C:/Users/asaad/Desktop/test2/Bsort_text.txt", sta
 Program.load_binary_file(path="C:/Users/asaad/Desktop/test2/Bsort_data.txt", starting_address=8192)
 
 
-
 @block
 def InstructionMemory_syn(load_data, load_address, address, data_out, clk):
     Mem1 = [Signal(intbv(0)[8:]) for i in range(3072)]
