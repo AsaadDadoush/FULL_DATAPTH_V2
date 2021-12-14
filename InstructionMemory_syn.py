@@ -22,8 +22,7 @@ def InstructionMemory_syn(load_data, load_address, address, data_out, clk):
         Mem4[load_address].next = load_data[32:24]
 
     @always(address)
-    def Memory_logic():
-        # translated_address = int(address / 4)
+    def read_logic():
         data_out.next = concat(Mem4[address], Mem3[address], Mem2[address],
                                Mem1[address])
 
@@ -83,6 +82,6 @@ def convert():
     ins.convert(hdl='Verilog')
 
 
-# convert()
+convert()
 # test = testbench()
 # test.run_sim(100000)

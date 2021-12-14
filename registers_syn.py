@@ -10,7 +10,6 @@ def registers_syn(rs1, rs2, rd, rs1_out, rs2_out, enable, DataWrite, clk):
     def Read_logic():
         rs1_out.next = Reg[rs1].signed()
         rs2_out.next = Reg[rs2].signed()
-
     @always_seq(clk.posedge, reset=None)
     def write_logic():
         if enable == 1:
@@ -89,6 +88,6 @@ def convert():
     reg.convert(hdl='Verilog')
 
 
-# convert()
+convert()
 # tst = testbench()
 # tst.run_sim(50)

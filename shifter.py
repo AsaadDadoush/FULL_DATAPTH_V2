@@ -59,4 +59,4 @@ def convert():
 
 # tst = test_bench()
 # tst.run_sim()
-# convert()
+convert()

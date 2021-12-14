@@ -9,10 +9,10 @@ Program.load_binary_file(path="C:/Users/asaad/Desktop/test2/Bsort_data.txt", sta
 
 @block
 def DataMemory_syn(data_in, enable, size, address, data_out, clk, load_data, load_address):
-    Mem1 = [Signal(intbv(0)[8:]) for i in range(3072)]
-    Mem2 = [Signal(intbv(0)[8:]) for i in range(3072)]
-    Mem3 = [Signal(intbv(0)[8:]) for i in range(3072)]
-    Mem4 = [Signal(intbv(0)[8:]) for i in range(3072)]
+    Mem1 = [Signal(intbv(0)[8:]) for i in range(8)]
+    Mem2 = [Signal(intbv(0)[8:]) for i in range(8)]
+    Mem3 = [Signal(intbv(0)[8:]) for i in range(8)]
+    Mem4 = [Signal(intbv(0)[8:]) for i in range(8)]
 
     @always(clk.posedge)
     def load_logic():
@@ -147,4 +147,4 @@ def convert():
 
 # test = test_bench()
 # test.run_sim(100000)
-# convert()
+convert()

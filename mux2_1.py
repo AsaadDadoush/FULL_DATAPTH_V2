@@ -27,7 +27,8 @@ def testbench():
 
     @instance
     def stimulus():
-        print("|               i0                 |               i1                  | sel |             Output              |")
+        print("|               i0                 |               i1                  | sel |             Output      "
+              "        |")
         for i in range(20):
             i0.next, i1.next, sel.next = randrange(32), randrange(32), randrange(2)
             yield delay(10)
@@ -44,6 +45,6 @@ def convert():
     mux.convert(hdl='Verilog')
 
 
-# convert()
+convert()
 # tst = testbench()
 # tst.run_sim()

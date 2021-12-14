@@ -29,7 +29,7 @@ def tb():
 
     @instance
     def stimulus():
-        print("|               i0                 |              i1                   |               i2                "
+        print("|               i0                 |              i1                   |               i2 "
               "   | sel |              Output             |")
         for i in range(20):
             i0.next, i1.next, i2.next, sel.next = randrange(32), randrange(32), randrange(32), randrange(4)
@@ -49,6 +49,6 @@ def convert():
     mux.convert(hdl='Verilog')
 
 
-# convert()
+convert()
 # tst = tb()
 # tst.run_sim()

@@ -16,7 +16,7 @@ def InstructionMemory(load_data, load_address, address, data_out, clk):
         Mem4[load_address].next = load_data[32:24]
 
     @always(address)
-    def Memory_logic():
+    def read_logic():
         translated_address = int(address / 4)
         data_out.next = concat(Mem4[translated_address], Mem3[translated_address], Mem2[translated_address],
                                Mem1[translated_address])
