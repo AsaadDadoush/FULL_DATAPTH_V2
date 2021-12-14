@@ -25,12 +25,12 @@ Program.load_binary_file(path="C:/Users/asaad/Desktop/test2/Bsort_data.txt", sta
 @block
 def top_level(Constant_4, clk,  reset,load_ins, load_data, load_address, flag):
     # ======================= Lines ======================= #
-    gen_to_PC, pc_out, imm_sel, signed_extnetion_output, Data_Memory_out, alu_out, Instruction_Memory_out, \
-    input_for_shifter = [Signal(intbv(0)[32:]) for i in range(8)]
+    gen_to_PC, pc_out, imm_sel, signed_extnetion_output, Data_Memory_out, Instruction_Memory_out, \
+    input_for_shifter = [Signal(intbv(0)[32:]) for i in range(7)]
     rs1, rs2, rd, operation_sel = [Signal(intbv(0)[5:0]) for i in range(4)]
     immU, immJ = [Signal(intbv(0)[20:0]) for i in range(2)]
     immI, immS, immB = [Signal(intbv(0)[12:0]) for i in range(3)]
-    rs1_out, rs2_out, data_in_Reg, a, b = [Signal(intbv(0, min=-2 ** 31, max=2 ** 31)) for i in range(5)]
+    rs1_out, rs2_out, data_in_Reg, a, b,alu_out = [Signal(intbv(0, min=-2 ** 31, max=2 ** 31)) for i in range(6)]
     imm32I, imm32S, imm32B, imm32U, imm32J = [Signal(intbv(0)[32:0]) for i in range(5)]
     opcode, func7 = [Signal(intbv(0)[7:]) for i in range(2)]
     size_sel, sign_selection = [Signal(intbv(0)[2:]) for i in range(2)]
@@ -135,5 +135,3 @@ def test_bench():
         print("\n # Processing...")
 
     return instances()
-
-

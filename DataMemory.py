@@ -54,7 +54,7 @@ def DataMemory(data_in, enable, size, address, data_out, clk, load_data, load_ad
     @always_comb
     def Read_logic():
         translated_address = (int(address / 4))
-        if translated_address > 3072:
+        if translated_address > 3072 or translated_address<0:
             translated_address = 3071
         if size == 0:
             data_out.next = concat("00000000", "00000000", "00000000", Mem1[translated_address])
