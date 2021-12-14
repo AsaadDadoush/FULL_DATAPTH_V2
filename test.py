@@ -21,12 +21,6 @@ def DataMemory(data_in, enable, size, address, data_out, clk, load_data, load_ad
             elif size == 1:
                 Mem1[address].next = data_in[8:0]
                 Mem2[address].next = data_in[16:8]
-
-            elif size == 2:
-                Mem1[address].next = data_in[8:0]
-                Mem2[address].next = data_in[16:8]
-                Mem3[address].next = data_in[24:16]
-                Mem4[address].next = data_in[32:24]
             else:
                 Mem1[address].next = data_in[8:0]
                 Mem2[address].next = data_in[16:8]
